@@ -1,0 +1,91 @@
+# encoding: UTF-8
+# This file is auto-generated from the current state of the database. Instead
+# of editing this file, please use the migrations feature of Active Record to
+# incrementally modify your database, and then regenerate this schema definition.
+#
+# Note that this schema.rb definition is the authoritative source for your
+# database schema. If you need to create the application database on another
+# system, you should be using db:schema:load, not running all the migrations
+# from scratch. The latter is a flawed and unsustainable approach (the more migrations
+# you'll amass, the slower it'll run and the greater likelihood for issues).
+#
+# It's strongly recommended to check this file into your version control system.
+
+ActiveRecord::Schema.define(:version => 20120705090811) do
+
+  create_table "addrs", :force => true do |t|
+    t.string   "name"
+    t.string   "typeofaddr"
+    t.string   "postindex"
+    t.string   "string1"
+    t.string   "string2"
+    t.string   "key"
+    t.text     "note"
+    t.integer  "organization_id"
+    t.integer  "contact_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "bankaccs", :force => true do |t|
+    t.string   "name"
+    t.string   "full_name"
+    t.string   "ks"
+    t.string   "rs"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+    t.integer  "organization_id"
+    t.string   "bik"
+  end
+
+  create_table "contacts", :force => true do |t|
+    t.string   "name"
+    t.string   "short_name"
+    t.string   "full_name"
+    t.string   "to_name"
+    t.string   "post"
+    t.string   "phone1"
+    t.string   "phone2"
+    t.string   "phone3"
+    t.string   "phone4"
+    t.string   "key"
+    t.string   "tag"
+    t.text     "note"
+    t.integer  "organization_id"
+    t.datetime "created_at",      :null => false
+    t.datetime "updated_at",      :null => false
+  end
+
+  create_table "organizations", :force => true do |t|
+    t.string   "name"
+    t.string   "tag"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
+    t.string   "opf"
+    t.string   "short_name"
+    t.string   "full_name"
+    t.string   "inn"
+    t.string   "kpp"
+    t.string   "ogrn"
+    t.string   "okpo"
+  end
+
+  create_table "products", :force => true do |t|
+    t.string  "name"
+    t.string  "articul"
+    t.integer "ean13"
+    t.text    "note"
+    t.decimal "weight"
+    t.decimal "x"
+    t.decimal "y"
+    t.decimal "z"
+    t.boolean "service"
+    t.boolean "purchased"
+    t.integer "sku_id"
+  end
+
+  create_table "skus", :force => true do |t|
+    t.string "name"
+  end
+
+end

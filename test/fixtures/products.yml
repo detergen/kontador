@@ -1,0 +1,27 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  articul: MyString
+  ean13: 1
+  note: MyText
+  weight: 9.99
+  x: 9.99
+  y: 9.99
+  z: 9.99
+  service: false
+  purchased: false
+  sku_id: 1
+
+two:
+  name: MyString
+  articul: MyString
+  ean13: 1
+  note: MyText
+  weight: 9.99
+  x: 9.99
+  y: 9.99
+  z: 9.99
+  service: false
+  purchased: false
+  sku_id: 1

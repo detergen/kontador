@@ -1,0 +1,19 @@
+== Kontador
+
+This is startup of ERP system for SMB (Small and medium Business).
+
+== Roadmap:
+- Users
+- ACL
+- CRM
+- Products management
+- Orders managment
+- Warehouses management
+
+== Software basis: 
+* Ruby on Rails 
+* Postgres 9.x
+
+== Status
+
+Very very begining stady...

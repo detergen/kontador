@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  name: MyString
+  full_name: MyString
+  ks: MyString
+  rs: MyString
+
+two:
+  name: MyString
+  full_name: MyString
+  ks: MyString
+  rs: MyString
