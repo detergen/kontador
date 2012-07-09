@@ -1,8 +1,6 @@
 Kontador::Application.routes.draw do
   resources :order_lines do as_routes end
 
-  resources :orders do as_routes end
-
   resources :skus do as_routes end
 
   resources :products do as_routes end
@@ -14,6 +12,14 @@ Kontador::Application.routes.draw do
   resources :bankaccs do as_routes end
 
   resources :organizations do as_routes end
+
+
+  resources :orders do 
+	  member do
+		  get 'to_odt'
+	  end
+	  as_routes 
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

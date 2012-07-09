@@ -5,4 +5,8 @@ class Order < ActiveRecord::Base
 
 	has_many :order_lines
 
+	def to_label
+		" #: #{number}"
+	end
+
 end

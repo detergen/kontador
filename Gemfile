@@ -6,6 +6,7 @@ gem 'rails', '3.2.1'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'sqlite3'
+gem 'odf-report'
 
 gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'
 
