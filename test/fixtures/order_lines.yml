@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  order_id: 1
+  product_id: 1
+  qty: 9.99
+  price: 9.99
+  vat: 9.99
+  vat: 
+  vat_out: false
+
+two:
+  order_id: 1
+  product_id: 1
+  qty: 9.99
+  price: 9.99
+  vat: 9.99
+  vat: 
+  vat_out: false

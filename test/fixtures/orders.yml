@@ -1,0 +1,23 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/Fixtures.html
+
+one:
+  number: MyString
+  order_date: 2012-07-08
+  document_date: 2012-07-08
+  note: MyText
+  status: MyString
+  tag: MyString
+  from_id: 1
+  to_id: 1
+  recipient_id: 1
+
+two:
+  number: MyString
+  order_date: 2012-07-08
+  document_date: 2012-07-08
+  note: MyText
+  status: MyString
+  tag: MyString
+  from_id: 1
+  to_id: 1
+  recipient_id: 1

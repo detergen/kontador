@@ -1,4 +1,8 @@
 Kontador::Application.routes.draw do
+  resources :order_lines do as_routes end
+
+  resources :orders do as_routes end
+
   resources :skus do as_routes end
 
   resources :products do as_routes end
