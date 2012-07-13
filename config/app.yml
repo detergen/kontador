@@ -1,9 +1,12 @@
 production: 
   title: Title
+  from_law_address_key: law_address
 
 development: 
   title: Title [DEV]
+  from_law_address_key: law_address
 
 test: 
   title: Title [TEST]
+  from_law_address_key: law_address
 

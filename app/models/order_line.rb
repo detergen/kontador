@@ -5,4 +5,8 @@ class OrderLine < ActiveRecord::Base
 	def to_label
 		"OrderLines"
 	end
+
+	def sum_price
+		#self.qty*self.price
+	end
 end

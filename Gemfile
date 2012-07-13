@@ -11,6 +11,7 @@ gem 'odf-report'
 gem 'active_scaffold', :git => 'git://github.com/activescaffold/active_scaffold.git'
 
 gem 'simple-navigation'
+gem 'ru_propisju'
 
 # Gems used only for assets and not required
 # in production environments by default.
