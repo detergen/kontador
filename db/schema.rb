@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120714180452) do
+ActiveRecord::Schema.define(:version => 20120715142141) do
 
   create_table "addrs", :force => true do |t|
     t.string   "name"
@@ -88,6 +88,11 @@ ActiveRecord::Schema.define(:version => 20120714180452) do
     t.string   "kpp"
     t.string   "ogrn"
     t.string   "okpo"
+  end
+
+  create_table "product_orgs", :force => true do |t|
+    t.integer "product_id"
+    t.integer "organization_id"
   end
 
   create_table "products", :force => true do |t|

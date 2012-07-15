@@ -13,7 +13,6 @@ Kontador::Application.routes.draw do
 
   resources :organizations do as_routes end
 
-
   resources :orders do 
 	  member do
 		  get 'to_odt'
