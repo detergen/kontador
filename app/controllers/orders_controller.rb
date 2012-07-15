@@ -3,12 +3,36 @@ class OrdersController < ApplicationController
 	include ActionView::Helpers::NumberHelper
 
 	active_scaffold :order do |conf|
+		conf.list.columns = [
+			:number,
+			:document_date,
+			:from,
+			:to,
+			:tag,
+		]
+		#conf.columns[:from_id].actions_for_association_links = [:edit]
+		#conf.columns[:from_id].clear_link
+		conf.columns = [
+			:from,
+			:bankacc,
+			:number,
+			:document_date,
+			:to,
+			:recipient,
+			:status,
+			:order_date,
+			:note,
+			:tag,
+			:order_lines
+		]
 			conf.action_links.add 'to_odt', :label => 'Invoice', :page => true, :type => :member
-			conf.columns[:from].form_ui = :select
+
 			conf.columns[:to].form_ui = :select
 			conf.columns[:recipient].form_ui = :select
+			conf.columns[:from].form_ui = :select
 			conf.columns[:bankacc].form_ui = :select
 		end
+
 
 		def to_odt
 
@@ -56,7 +80,7 @@ class OrdersController < ApplicationController
 				end
 
 				#Totals and number to words lines
-				r.add_field :total, number_to_currency(@orderlines.sum('price*qty'), :locale => :fr)
+				r.add_field :total, @orderlines.sum('price*qty')
 				r.add_field :vat_in, @orderlines.sum('price*qty/118*18')
 				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@orderlines.count('qty'), 3, ["наименование","наименования","наименований"])
 				r.add_field :total_propisju, RuPropisju.rublej(@orderlines.sum('price*qty'))
