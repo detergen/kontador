@@ -7,6 +7,7 @@ class OrderLine < ActiveRecord::Base
 	end
 
 	def sum_price
-		#self.qty*self.price
+		self.qty*self.price
 	end
+
 end
