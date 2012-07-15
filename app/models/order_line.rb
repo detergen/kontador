@@ -10,4 +10,17 @@ class OrderLine < ActiveRecord::Base
 		self.qty*self.price
 	end
 
+	def after_save
+		self.update_total_price
+	end
+
+	def after_destroy
+		self.update_total_price
+	end
+
+	def update_total_price
+		self.order.total_price = self.order.order_lines.sum(self.sum_price)
+		self.order.save
+	end
+
 end

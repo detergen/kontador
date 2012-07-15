@@ -10,4 +10,8 @@ class Order < ActiveRecord::Base
 		" #: #{number}"
 	end
 
+	def total_price
+		order_lines.sum("price*qty")
+	end
+
 end

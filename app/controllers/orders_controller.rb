@@ -8,10 +8,10 @@ class OrdersController < ApplicationController
 			:document_date,
 			:from,
 			:to,
+			:total_price,
 			:tag,
 		]
-		#conf.columns[:from_id].actions_for_association_links = [:edit]
-		#conf.columns[:from_id].clear_link
+
 		conf.columns = [
 			:from,
 			:bankacc,
@@ -28,12 +28,15 @@ class OrdersController < ApplicationController
 			conf.action_links.add 'to_odt', :label => 'Invoice', :page => true, :type => :member
 
 			conf.columns[:to].form_ui = :select
+
 			conf.columns[:recipient].form_ui = :select
 			conf.columns[:from].form_ui = :select
 			conf.columns[:bankacc].form_ui = :select
+			conf.columns[:total_price].options = {:format => :currency}
 		end
 
 
+	#Report - bill
 		def to_odt
 
 			@order = Order.find(params[:id], :include => {:from => :addrs}, :conditions => {:from => {:addrs => {:key => "law_address"}}})
