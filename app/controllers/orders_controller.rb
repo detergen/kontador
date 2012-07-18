@@ -26,23 +26,20 @@ class OrdersController < ApplicationController
 			:order_lines
 		]
 			conf.action_links.add 'to_odt', :label => 'Invoice', :page => true, :type => :member
-
 			conf.columns[:to].form_ui = :select
-
 			conf.columns[:recipient].form_ui = :select
 			conf.columns[:from].form_ui = :select
 			conf.columns[:bankacc].form_ui = :select
 			conf.columns[:total_price].options = {:format => :currency}
 		end
-
-
+	
 	#Report - bill
-		def to_odt
+		def to_odt #Rename to bill_report
+
 			#Getting info for "bill from"
 			@order = Order.find(params[:id], :include => {:from => :addrs}, :conditions => {:from => {:addrs => {:key => "law_address"}}})
 			@faddress = @order.from.addrs[0] #Getting 1 related address for law address field
 			@bankacc_from = @order.bankacc #Getting bank account info
-
 
 			#Getting fio for signature TODO make "head" and "book" from some config
 			@sign_1 = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "head"}}).find(params[:id]).from.contacts[0]
@@ -54,7 +51,6 @@ class OrdersController < ApplicationController
 			#Getting "to" and "recipient info
 			@org_to = @order.to
 			@org_recipient = @order.recipient
-			@posnumber = 0 #Initial number for order lines (items)
 
 			#Creating report
 			#TODO create optional user path to templates
@@ -79,19 +75,20 @@ class OrdersController < ApplicationController
 				r.add_field :bank_fullname, @bankacc_from.full_name
 
 				#Order lines 
+				@posnumber = 0 #Initial number for order lines (items)
 				r.add_table("TABLE_1", @orderlines, :header=>true) do |t|
 					t.add_column(:id) {@posnumber +=1} 
 					t.add_column(:articul) {|order_line| order_line.product.articul}	
 					t.add_column(:product) {|order_line| order_line.product.name }	
 					t.add_column(:item_qty, :qty)		
 					t.add_column(:price, :price) 		#TODO number to currency 
-					t.add_column(:sumprice, :sum_price) #TODO number to currency 
+					t.add_column(:sumprice, :sum_price) 
 					t.add_column(:sku) {|order_line| order_line.product.sku[:name]}	
 				end
 
 				#Totals and number to words lines
 				r.add_field :total, number_to_currency(@order.total_price)
-                r.add_field :vat_in, number_to_currency(@orderlines.sum('price*qty/118*18'))
+                r.add_field :vat_in, number_to_currency(@orderlines.sum('price*qty/118*18')) #TODO Make VAT formula as class method or something
 				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@orderlines.count('qty'), 3, ["наименование","наименования","наименований"])
 				r.add_field :total_propisju, RuPropisju.rublej(@orderlines.sum('price*qty'))
 
@@ -101,8 +98,12 @@ class OrdersController < ApplicationController
 
 			end
 
+
+			#Creating meaningful file name
+			@file_name = "Счет_№" + @order.number + "_" + @order.from.name + "-" + @org_to.name + "_" + @order.document_date.strftime("%d.%m.%Y") + "_на_" + number_to_currency(@order.total_price, :unit => "") + ".odt"
+
 			report_file_name = report.generate
-			send_file(report_file_name)
+			send_file(report_file_name, :filename => @file_name)
 
 		end
 
