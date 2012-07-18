@@ -38,19 +38,27 @@ class OrdersController < ApplicationController
 
 	#Report - bill
 		def to_odt
-
+			#Getting info for "bill from"
 			@order = Order.find(params[:id], :include => {:from => :addrs}, :conditions => {:from => {:addrs => {:key => "law_address"}}})
-			@faddress = @order.from.addrs[0]
-			@bankacc_from = @order.bankacc
+			@faddress = @order.from.addrs[0] #Getting 1 related address for law address field
+			@bankacc_from = @order.bankacc #Getting bank account info
+
+
+			#Getting fio for signature TODO make "head" and "book" from some config
+			@sign_1 = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "head"}}).find(params[:id]).from.contacts[0]
+			@sign_2 = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "book"}}).find(params[:id]).from.contacts[0]
+
+			#Getting order lines (items)
 			@orderlines = @order.order_lines
 			
-
+			#Getting "to" and "recipient info
 			@org_to = @order.to
 			@org_recipient = @order.recipient
+			@posnumber = 0 #Initial number for order lines (items)
 
-
-			#report = ODFReport::Report.new("#{RAILS_ROOT}/app/assets/reports/t.odt") do |r|
-			report = ODFReport::Report.new("/home/alex/devel/kontador/app/assets/reports/t.odt") do |r|
+			#Creating report
+			#TODO create optional user path to templates
+			report = ODFReport::Report.new("app/assets/reports/bill.odt") do |r|
 				r.add_field :order_number, @order.number
 				r.add_field :order_document_date, @order.document_date.strftime("%d.%m.%Y")
 
@@ -69,24 +77,27 @@ class OrdersController < ApplicationController
 				r.add_field :bank_rs, @bankacc_from.rs
 				r.add_field :bank_bik, @bankacc_from.bik
 				r.add_field :bank_fullname, @bankacc_from.full_name
-				#r.add_field :test, @orderlines
 
 				#Order lines 
 				r.add_table("TABLE_1", @orderlines, :header=>true) do |t|
-					t.add_column(:item_id, :id)
+					t.add_column(:id) {@posnumber +=1} 
 					t.add_column(:articul) {|order_line| order_line.product.articul}	
 					t.add_column(:product) {|order_line| order_line.product.name }	
-					t.add_column(:item_qty, :qty)
-					t.add_column(:price, :price)
-					t.add_column(:sumprice, :sum_price)
+					t.add_column(:item_qty, :qty)		
+					t.add_column(:price, :price) 		#TODO number to currency 
+					t.add_column(:sumprice, :sum_price) #TODO number to currency 
 					t.add_column(:sku) {|order_line| order_line.product.sku[:name]}	
 				end
 
 				#Totals and number to words lines
-				r.add_field :total, @orderlines.sum('price*qty')
-				r.add_field :vat_in, @orderlines.sum('price*qty/118*18')
+				r.add_field :total, number_to_currency(@order.total_price)
+                r.add_field :vat_in, number_to_currency(@orderlines.sum('price*qty/118*18'))
 				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@orderlines.count('qty'), 3, ["наименование","наименования","наименований"])
 				r.add_field :total_propisju, RuPropisju.rublej(@orderlines.sum('price*qty'))
+
+				#Signatures 
+				r.add_field :sign1, @sign_1[:short_name]
+				r.add_field :sign2, @sign_2[:short_name]
 
 			end
 
