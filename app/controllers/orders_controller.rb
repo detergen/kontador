@@ -80,9 +80,9 @@ class OrdersController < ApplicationController
 					t.add_column(:id) {@posnumber +=1} 
 					t.add_column(:articul) {|order_line| order_line.product.articul}	
 					t.add_column(:product) {|order_line| order_line.product.name }	
-					t.add_column(:item_qty, :qty)		
-					t.add_column(:price, :price) 		#TODO number to currency 
-					t.add_column(:sumprice, :sum_price) 
+					t.add_column (:item_qty) {|order_line| number_with_precision(order_line.qty, :precision => 5, :significant => true, :strip_insignificant_zeros => true)}
+					t.add_column (:price) {|order_line| number_to_currency(order_line.price,:unit => "")}
+					t.add_column(:sumprice) {|order_line| number_to_currency(order_line.sum_price,:unit => "")}  
 					t.add_column(:sku) {|order_line| order_line.product.sku[:name]}	
 				end
 
@@ -97,7 +97,6 @@ class OrdersController < ApplicationController
 				r.add_field :sign2, @sign_2[:short_name]
 
 			end
-
 
 			#Creating meaningful file name
 			@file_name = "Счет_№" + @order.number + "_" + @order.from.name + "-" + @org_to.name + "_" + @order.document_date.strftime("%d.%m.%Y") + "_на_" + number_to_currency(@order.total_price, :unit => "") + ".odt"
