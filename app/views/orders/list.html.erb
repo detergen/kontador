@@ -1,0 +1,13 @@
+<!-- Whatever above -->
+
+bla bla bla
+
+<%= render :super %>
+Тут должен быть дебуг
+
+<%= @testy = {"order" => Orderinfo.getall(1)} =%>
+
+<%= @testy ["from"] =  @testy["order"].from =%>
+<%= debug (@testy) %>
+
+<!-- Whatever below -->
