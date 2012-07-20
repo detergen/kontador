@@ -53,6 +53,7 @@ SimpleNavigation::Configuration.run do |navigation|
 	primary.item :bankacc, 'Bank accounts', bankaccs_path
 	primary.item :product, 'Products', products_path
 	primary.item :order, 'Orders', orders_path
+	primary.item :warrant, 'Warrants', warrants_path
 	primary.item :sku, 'Sku', skus_path
 
     # Add an item which has a sub navigation (same params, but with block)

@@ -1,4 +1,6 @@
 Kontador::Application.routes.draw do
+  resources :warrants do as_routes end
+
   resources :order_lines do as_routes end
 
   resources :skus do as_routes end
@@ -15,7 +17,8 @@ Kontador::Application.routes.draw do
 
   resources :orders do 
 	  member do
-		  get 'to_odt'
+		  get 'bill'
+		  get 'warrant'
 	  end
 	  as_routes 
   end
