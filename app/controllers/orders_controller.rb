@@ -1,6 +1,8 @@
 # -*- encoding : utf-8 -*-
 class OrdersController < ApplicationController
+
 	include ActionView::Helpers::NumberHelper
+	include Oreport
 	include Orderinfo
 
 	active_scaffold :order do |conf|
@@ -49,139 +51,17 @@ class OrdersController < ApplicationController
 		end
 
 	#Report - bill
-		def bill #Rename to bill_report
-
-
-			#Getting info for "bill from"
+		def bill 
 			@ohash = Orderinfo.getall(params[:id])
-
-			#Creating report
-			#TODO create optional user path to templates
-			report = ODFReport::Report.new("app/assets/reports/bill.odt") do |r|
-				r.add_field :order_number, @ohash["order"].number
-				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
-
-				#Organization from fields
-				r.add_field :from, @ohash["from"].short_name 
-				r.add_field :from_inn, @ohash["from"].inn
-				r.add_field :from_kpp, @ohash["from"].kpp
-				r.add_field :from_law_address, @ohash["faddress"]
-
-				#Organization "to" fields
-				r.add_field :to, @ohash["to"].short_name 
-				r.add_field :recipient, @ohash["recipient"].short_name 
-
-				#Bank acc fields 
-				r.add_field :bank_ks, @ohash["bankacc_from"].ks
-				r.add_field :bank_rs, @ohash["bankacc_from"].rs
-				r.add_field :bank_bik, @ohash["bankacc_from"].bik
-				r.add_field :bank_fullname, @ohash["bankacc_from"].full_name
-
-				#r.add_field :test, @ohash["orderlines"][0].id
-
-				#Order lines 
-				@posnumber = 0 #Initial number for order lines (items)
-				r.add_table("TABLE_1", @ohash["orderlines"], :header=>true) do |t|
-					t.add_column(:id) {@posnumber +=1} 
-					t.add_column(:articul) {|order_line| order_line.product.articul}	
-					t.add_column(:product) {|order_line| order_line.product.name }	
-					t.add_column (:item_qty) {|order_line| number_with_precision(order_line.qty, :precision => 5, :significant => true, :strip_insignificant_zeros => true)}
-					t.add_column (:price) {|order_line| number_to_currency(order_line.price,:unit => "")}
-					t.add_column(:sumprice) {|order_line| number_to_currency(order_line.sum_price,:unit => "")}  
-					t.add_column(:sku) {|order_line| order_line.product.sku[:name]}	
-				end
-
-				#Totals and number to words lines
-				r.add_field :total, number_to_currency(@ohash["order"].total_price)
-				r.add_field :vat_in, number_to_currency((@ohash["order"].total_price)/118.0*18.0) #TODO Make VAT formula as class method or something
-				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@ohash["orderlines"].length, 3, ["наименование","наименования","наименований"])
-				r.add_field :total_propisju, RuPropisju.rublej(@ohash["order"].total_price)
-
-				#Signatures 
-				r.add_field :sign1, @ohash["sign_1"].short_name
-				r.add_field :sign2, @ohash["sign_2"].short_name
-
-			end
-
-			#Creating meaningful file name
-			@file_name = "Счет_№" + @ohash["order"].number + "_" + @ohash["from"].name + "-" + @ohash["to"].name + "_" + @ohash["order"].document_date.strftime("%d.%m.%Y") + "_на_" + number_to_currency(@ohash["order"].total_price, :unit => "") + ".odt"
-
-			report_file_name = report.generate
-			send_file(report_file_name, :filename => @file_name)
-
+			@report = Oreport.bill(@ohash)
+			 send_file(@report["report"], :filename => @report["file_name"]) 
 		end
 
 	#Report - warrant
-		def warrant #Rename to bill_report
-
-			#Getting info for "bill from"
-			@order = Order.find(params[:id], :include => {:from => :addrs}, :conditions => {:from => {:addrs => {:key => "law_address"}}})
-			@faddress = @order.from.addrs[0] #Getting 1 related address for law address field
-			@bankacc_from = @order.bankacc #Getting bank account info
-
-			#Getting fio for signature TODO make "head" and "book" from some config
-			@sign_1 = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "head"}}).find(params[:id]).from.contacts[0]
-			@sign_2 = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "book"}}).find(params[:id]).from.contacts[0]
-
-			#Getting order lines (items)
-			@orderlines = @order.order_lines
-			
-			#Getting "to" and "recipient info
-			@org_to = @order.to
-			@org_recipient = @order.recipient
-
-			#Creating report
-			#TODO create optional user path to templates
-			report = ODFReport::Report.new("app/assets/reports/bill.odt") do |r|
-				r.add_field :order_number, @order.number
-				r.add_field :order_document_date, @order.document_date.strftime("%d.%m.%Y")
-
-				#Organization from fields
-				r.add_field :from, "#{@order.from.opf} \"#{@order.from.short_name}\""
-				r.add_field :from_inn, @order.from.inn
-				r.add_field :from_kpp, @order.from.kpp
-				r.add_field :from_law_address, "#{@faddress[:postindex]} #{@faddress[:string1]}"
-
-				#Organization "to" fields
-				r.add_field :to, "#{@org_to.opf} \"#{@org_to.short_name}\""
-				r.add_field :recipient, "#{@org_recipient.opf} \"#{@org_recipient.short_name}\""
-
-				#Bank acc fields 
-				r.add_field :bank_ks, @bankacc_from.ks
-				r.add_field :bank_rs, @bankacc_from.rs
-				r.add_field :bank_bik, @bankacc_from.bik
-				r.add_field :bank_fullname, @bankacc_from.full_name
-
-				#Order lines 
-				@posnumber = 0 #Initial number for order lines (items)
-				r.add_table("TABLE_1", @orderlines, :header=>true) do |t|
-					t.add_column(:id) {@posnumber +=1} 
-					t.add_column(:articul) {|order_line| order_line.product.articul}	
-					t.add_column(:product) {|order_line| order_line.product.name }	
-					t.add_column (:item_qty) {|order_line| number_with_precision(order_line.qty, :precision => 5, :significant => true, :strip_insignificant_zeros => true)}
-					t.add_column (:price) {|order_line| number_to_currency(order_line.price,:unit => "")}
-					t.add_column(:sumprice) {|order_line| number_to_currency(order_line.sum_price,:unit => "")}  
-					t.add_column(:sku) {|order_line| order_line.product.sku[:name]}	
-				end
-
-				#Totals and number to words lines
-				r.add_field :total, number_to_currency(@order.total_price)
-                r.add_field :vat_in, number_to_currency(@orderlines.sum('price*qty/118*18')) #TODO Make VAT formula as class method or something
-				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@orderlines.count('qty'), 3, ["наименование","наименования","наименований"])
-				r.add_field :total_propisju, RuPropisju.rublej(@orderlines.sum('price*qty'))
-
-				#Signatures 
-				r.add_field :sign1, @sign_1[:short_name]
-				r.add_field :sign2, @sign_2[:short_name]
-
-			end
-
-			#Creating meaningful file name
-			@file_name = "Счет_№" + @order.number + "_" + @order.from.name + "-" + @org_to.name + "_" + @order.document_date.strftime("%d.%m.%Y") + "_на_" + number_to_currency(@order.total_price, :unit => "") + ".odt"
-
-			report_file_name = report.generate
-			send_file(report_file_name, :filename => @file_name)
-
+		def warrant 
+			@ohash = Orderinfo.getall(params[:id])
+			@report = Oreport.bill(@ohash)
+			 send_file(@report["report"], :filename => @report["file_name"]) 
 		end
 
-end 
+end
