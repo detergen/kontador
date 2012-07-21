@@ -41,7 +41,6 @@ class OrdersController < ApplicationController
 			:order_lines
 		]
 			conf.action_links.add 'bill', :label => 'Invoice', :page => true, :type => :member
-			conf.action_links.add 'warrant', :label => 'Warrant', :page => true, :type => :member
 			conf.columns[:to].form_ui = :select
 			conf.columns[:recipient].form_ui = :select
 			conf.columns[:from].form_ui = :select
@@ -54,14 +53,6 @@ class OrdersController < ApplicationController
 		def bill 
 			@ohash = Orderinfo.getall(params[:id])
 			@report = Oreport.bill(@ohash)
-			 send_file(@report["report"], :filename => @report["file_name"]) 
+			send_file(@report["report"], :filename => @report["file_name"]) 
 		end
-
-	#Report - warrant
-		def warrant 
-			@ohash = Orderinfo.getall(params[:id])
-			@report = Oreport.bill(@ohash)
-			 send_file(@report["report"], :filename => @report["file_name"]) 
-		end
-
 end
