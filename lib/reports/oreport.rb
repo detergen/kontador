@@ -139,5 +139,6 @@ module Oreport
 			@report["file_name"] = "Доверенность_№" + @ohash["warrant"].id.to_s + "_" + @ohash["warrant"].contact.short_name + "-" + @ohash["to"].name + "_до_" + @ohash["warrant"].date_till.strftime("%d.%m.%Y") + "_к сч_" + @ohash["order"].number + ".odt"
 
 			return @report	
+#TODO exclude repeated code
 		end
 end
