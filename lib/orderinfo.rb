@@ -14,7 +14,9 @@ module Orderinfo
 		@ohash["to"] =  @order.to
 		@ohash["recipient"] =  @order.recipient
 		@ohash["faddress"] = @order.from.addrs[0] #Getting 1 related address for law address field
+		@ohash["taddress"] = @order.to.addrs[0] #Getting 1 related address for law address field
 		@ohash["bankacc_from"] = @order.bankacc #Getting bank account info
+		@ohash["bankacc_to"] = Bankacc.find(:all, :conditions => ['organization_id = ?', @order.from.id ])
 		@ohash["sign_1"] = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "head"}}).find(order_id).from.contacts[0]
 		@ohash["sign_2"] = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "book"}}).find(order_id).from.contacts[0]
 		@ohash["orderlines"] = OrderLine.find(:all, :conditions => ['order_id = ?', order_id ], :joins => [:product])
@@ -30,6 +32,7 @@ module Orderinfo
 
 		#Create address with postindex TODO include second addres string
 		@ohash["faddress"] = "#{@order.from.addrs[0].postindex} #{@order.from.addrs[0].string1}"
+		@ohash["taddress"] = "#{@order.to.addrs[0].postindex} #{@order.to.addrs[0].string1}"
 
 		#TODO decide where Warrant to call from 
 		@ohash["warrant"] = Warrant.all( :include => :contact, :conditions => ['order_id = ?', order_id ])[0]
