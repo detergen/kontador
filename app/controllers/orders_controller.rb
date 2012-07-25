@@ -15,7 +15,12 @@ class OrdersController < ApplicationController
 		#conf.update.action_group = 'member.actions.crud' 
 		#conf.nested.action_group = 'member.actions.nested'
 
-		#conf.nested.add_link(:order_lines, :label => "Dive in", :page => true)
+		conf.nested.add_link(:order_lines, :label => "Dive in", :page => true)
+		conf.nested.add_link(:payments, :label => "Payments", :page => true)
+
+
+		conf.action_links.add 'bill', :label => 'Invoice', :page => true, :type => :member
+		conf.action_links.add 'torg12', :label => 'T12', :page => true, :type => :member
 
 		conf.list.columns = [
 			:number,
@@ -40,14 +45,16 @@ class OrdersController < ApplicationController
 			:tag,
 			:order_lines
 		]
-			conf.action_links.add 'bill', :label => 'Invoice', :page => true, :type => :member
 			conf.columns[:to].form_ui = :select
 			conf.columns[:recipient].form_ui = :select
 			conf.columns[:from].form_ui = :select
 			conf.columns[:bankacc].form_ui = :select
 			conf.columns[:total_price].options = {:format => :currency}
 
+	# Add a copy link 
 		end
+
+
 
 	#Report - bill
 		def bill 
@@ -55,4 +62,13 @@ class OrdersController < ApplicationController
 			@report = Oreport.bill(@ohash)
 			send_file(@report["report"], :filename => @report["file_name"]) 
 		end
+
+	#Report - Torg12
+		def torg12 
+			@ohash = Orderinfo.getall(params[:id])
+			@report = Oreport.torg12(@ohash)
+			send_file(@report["report"], :filename => @report["file_name"]) 
+		end
 end
+
+# Add the copy action 

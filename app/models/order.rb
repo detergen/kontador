@@ -5,6 +5,7 @@ class Order < ActiveRecord::Base
 	belongs_to :bankacc
 
 	has_many :order_lines
+	has_many :payments
 
 	has_one :warrant
 
