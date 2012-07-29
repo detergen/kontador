@@ -4,6 +4,7 @@ class ProductsController < ApplicationController
 	  conf.list.columns = [:name, :articul, :price, :weight, :tag ]
 	  conf.columns = [:name, :articul, :price, :sku, :weight, :x, :y, :z, :note, :purchased, :service,:tag]
 	  #conf.columns = [:name, :articul, :price, :sku, :weight, :x, :y, :z, :note, :purchased, :service,:tag, :organizations]
+	  conf.columns[:name].link
 
 	  conf.columns[:price].options = {:format => :currency}
 	  conf.columns[:sku].form_ui = :select
