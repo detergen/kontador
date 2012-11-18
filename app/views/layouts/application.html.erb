@@ -3,12 +3,40 @@
 <head>
   <title>Kontador</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= stylesheet_link_tag    "2col", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
 </head>
 <body>
-	<%= render_navigation %>
-	<%= yield %>
+	<div id="maincontainer">
+		<div id="topsection">
+			<div class="innertube">
+				<h2>Header</h2>
+			</div>
+		</div>
+
+		<div id="contentwrapper">
+			<div id="contentcolumn">
+				<div class="innertube">
+
+					<%= yield %>
+
+				</div>
+			</div>
+		</div>
+
+		<div id="leftcolumn">
+			<div class="innertube">
+				<%= render_navigation %>
+			</div>
+
+		</div>
+
+		<div id="footer">
+			Footer - 2012
+		</div>
+
+	</div>
 
 </body>
 </html>
