@@ -13,10 +13,10 @@ module Orderinfo
 		@ohash["from"] =  @order.from
 		@ohash["to"] =  @order.to
 		@ohash["recipient"] =  @order.recipient
-		@ohash["faddress"] = @order.from.addrs[0] #Getting 1 related address for law address field
-		@ohash["taddress"] = @order.to.addrs[0] #Getting 1 related address for law address field
-		@ohash["bankacc_from"] = @order.bankacc #Getting bank account info
-		@ohash["bankacc_to"] = Bankacc.find(:all, :conditions => ['organization_id = ?', @order.from.id ])
+		@ohash["faddress"] = @order.from.addrs[0]#Getting 1 related address for law address field
+		@ohash["taddress"] = @order.to.addrs[0]#Getting 1 related address for law address field
+		@ohash["bankacc_from"] = @order.bankacc#Getting bank account info
+		@ohash["bankacc_to"] = Bankacc.find(:all, :conditions => ['organization_id = ?', @order.to.id ])
 		@ohash["sign_1"] = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "head"}}).find(order_id).from.contacts[0]
 		@ohash["sign_2"] = Order.includes(:from => :contacts).where(:from => {:contacts => {:key => "book"}}).find(order_id).from.contacts[0]
 		@ohash["orderlines"] = OrderLine.find(:all, :conditions => ['order_id = ?', order_id ], :joins => [:product])

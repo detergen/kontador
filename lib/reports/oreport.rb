@@ -77,6 +77,7 @@ module Oreport
 			report = ODFReport::Report.new("app/assets/reports/warrant.odt") do |r|
 				r.add_field :order_number, @ohash["order"].number
 				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
+				
 
 				#Organization from fields
 				r.add_field :from, @ohash["from"].short_name
@@ -183,7 +184,7 @@ module Oreport
 				r.add_field :bank_to_bik, @ohash["bankacc_to"][0].bik
 				r.add_field :bank_to_fullname, @ohash["bankacc_to"][0].full_name
 
-				r.add_field :test, @ohash["warrant"].contact.name
+				#r.add_field :test, @ohash["warrant"].contact.name
 
 				#Order lines 
 				@posnumber = 0 #Initial number for order lines (items)
@@ -207,18 +208,6 @@ module Oreport
 				r.add_field :vat_in, nc.number_to_currency((@ohash["order"].total_price)/118.0*18.0, :unit => "") 
 				r.add_field :pos_propisju, RuPropisju.propisju_shtuk(@ohash["orderlines"].length, 1, "")
 				r.add_field :total_propisju, RuPropisju.rublej(@ohash["order"].total_price)
-
-				#Warrant owner
-				r.add_field :warrant_id, @ohash["warrant"].id
-				r.add_field :warrant_date, @ohash["warrant"].date.strftime("%d.%m.%Y")
-				r.add_field :warrant_date_till, @ohash["warrant"].date_till.strftime("%d.%m.%Y")
-				r.add_field :name, @ohash["warrant"].contact.to_name
-
-				#Warrant owner's passport data
-				r.add_field :pasp_series, @ohash["warrant"].contact.pasp_series
-				r.add_field :pasp_number, @ohash["warrant"].contact.pasp_number
-				r.add_field :pasp_date, @ohash["warrant"].contact.pasp_date
-				r.add_field :pasp_given, @ohash["warrant"].contact.pasp_given
 
 				#Signatures 
 				r.add_field :sign1, @ohash["sign_1"].short_name
