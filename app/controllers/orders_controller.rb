@@ -16,7 +16,6 @@ class OrdersController < ApplicationController
 		#conf.nested.action_group = 'member.actions.nested'
 
 		conf.nested.add_link(:order_lines, :label => "Dive in", :page => true)
-		conf.nested.add_link(:payments, :label => "Payments", :page => true)
 
 
 		conf.action_links.add 'bill', :label => 'Invoice', :page => true, :type => :member

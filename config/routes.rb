@@ -1,14 +1,4 @@
 Kontador::Application.routes.draw do
-  resources :payments do 
-	  member do
-		  get 'import1c'
-	  end
-
-	  collection do
-		  get 'import1c'
-	  end
-	  as_routes 
-  end
 
   resources :warrants do 
 	  member do
@@ -34,7 +24,6 @@ Kontador::Application.routes.draw do
   resources :orders do 
 	  member do
 		  get 'bill'
-		  get 'order_payments'
 		  get 'torg12'
 	  end
 	  as_routes 
