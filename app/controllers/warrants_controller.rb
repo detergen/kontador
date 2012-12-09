@@ -11,6 +11,7 @@ class WarrantsController < ApplicationController
 	#Report - warrant
 	def warrant 
 		@ohash = Orderinfo.getwarrant(params[:id])
+		@ohash["template"] = "app/assets/reports/warrant.odt"
 		@report = Oreport.warrant(@ohash)
 		send_file(@report["report"], :filename => @report["file_name"]) 
 	end

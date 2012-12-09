@@ -58,6 +58,7 @@ class OrdersController < ApplicationController
 	#Report - bill
 		def bill 
 			@ohash = Orderinfo.getall(params[:id])
+			@ohash["template"] = "app/assets/reports/bill.odt"
 			@report = Oreport.bill(@ohash)
 			send_file(@report["report"], :filename => @report["file_name"]) 
 		end
@@ -65,6 +66,7 @@ class OrdersController < ApplicationController
 	#Report - Torg12
 		def torg12 
 			@ohash = Orderinfo.getall(params[:id])
+			@ohash["template"] = "app/assets/reports/torg-12.odt"
 			@report = Oreport.torg12(@ohash)
 			send_file(@report["report"], :filename => @report["file_name"]) 
 		end

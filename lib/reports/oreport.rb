@@ -12,7 +12,7 @@ module Oreport
 
 			#Creating report
 			#TODO create optional user path to templates
-			report = ODFReport::Report.new("app/assets/reports/bill.odt") do |r|
+			report = ODFReport::Report.new(@ohash["template"]) do |r|
 				r.add_field :order_number, @ohash["order"].number
 				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
 
@@ -74,7 +74,7 @@ module Oreport
 
 			#Creating report
 			#TODO create optional user path to templates
-			report = ODFReport::Report.new("app/assets/reports/warrant.odt") do |r|
+			report = ODFReport::Report.new(@ohash["template"]) do |r|
 				r.add_field :order_number, @ohash["order"].number
 				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
 				
@@ -152,7 +152,7 @@ module Oreport
 
 			#Creating report
 			#TODO create optional user path to templates
-			report = ODFReport::Report.new("app/assets/reports/torg-12.odt") do |r|
+			report = ODFReport::Report.new(@ohash["template"]) do |r|
 				r.add_field :order_number, @ohash["order"].number
 				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
 
