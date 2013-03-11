@@ -224,4 +224,12 @@ module Oreport
 			return @report	
 #TODO exclude repeated code
 		end
+
+		def self.sf(orderinfo)
+			nc = ActionView::Base.new
+			@report = self.torg12(orderinfo)
+			@report["file_name"] = "С-Ф_№" + @ohash["order"].number + "_" + @ohash["from"].name + "-" + @ohash["to"].name + "_" + @ohash["order"].document_date.strftime("%d.%m.%Y") + "_на_" + nc.number_to_currency(@ohash["order"].total_price, :unit => "") + ".odt"
+
+			return @report	
+		end
 end

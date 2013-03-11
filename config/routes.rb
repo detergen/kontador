@@ -25,6 +25,7 @@ Kontador::Application.routes.draw do
 	  member do
 		  get 'bill'
 		  get 'torg12'
+		  get 'sf'
 	  end
 	  as_routes 
   end

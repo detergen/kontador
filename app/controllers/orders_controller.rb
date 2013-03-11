@@ -20,6 +20,8 @@ class OrdersController < ApplicationController
 
 		conf.action_links.add 'bill', :label => 'Invoice', :page => true, :type => :member
 		conf.action_links.add 'torg12', :label => 'T12', :page => true, :type => :member
+		conf.action_links.add 'sf', :label => 'sf', :page => true, :type => :member
+	
 
 		conf.list.columns = [
 			:number,
@@ -53,8 +55,6 @@ class OrdersController < ApplicationController
 	# Add a copy link 
 		end
 
-
-
 	#Report - bill
 		def bill 
 			@ohash = Orderinfo.getall(params[:id])
@@ -68,6 +68,14 @@ class OrdersController < ApplicationController
 			@ohash = Orderinfo.getall(params[:id])
 			@ohash["template"] = "app/assets/reports/torg-12.odt"
 			@report = Oreport.torg12(@ohash)
+			send_file(@report["report"], :filename => @report["file_name"]) 
+		end
+
+	#Report - s-f
+		def sf 
+			@ohash = Orderinfo.getall(params[:id])
+			@ohash["template"] = "app/assets/reports/s-f.odt"
+			@report = Oreport.sf(@ohash)
 			send_file(@report["report"], :filename => @report["file_name"]) 
 		end
 end
