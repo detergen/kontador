@@ -155,6 +155,7 @@ module Oreport
 			report = ODFReport::Report.new(@ohash["template"]) do |r|
 				r.add_field :order_number, @ohash["order"].number
 				r.add_field :order_document_date, @ohash["order"].document_date.strftime("%d.%m.%Y")
+				r.add_field :order_document_date_s, I18n.localize(@ohash["order"].document_date, :format =>"%d %B %Y г")
 
 				#Organization from fields
 				r.add_field :from, @ohash["from"].short_name
